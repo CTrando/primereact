@@ -1884,7 +1884,7 @@ var Calendar = exports.Calendar = function (_Component) {
     }, {
         key: 'renderTimePicker',
         value: function renderTimePicker() {
-            if (this.props.showTime || this.props.timeOnly && this.props.value instanceof Date) {
+            if ((this.props.showTime || this.props.timeOnly) && this.props.value instanceof Date) {
                 return _react2.default.createElement(
                     'div',
                     { className: 'ui-timepicker ui-widget-header ui-corner-all' },

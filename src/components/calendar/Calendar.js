@@ -1801,7 +1801,7 @@ export class Calendar extends Component {
     }
 
     renderTimePicker() {
-        if (this.props.showTime || this.props.timeOnly && (this.props.value instanceof Date)) {
+        if ((this.props.showTime || this.props.timeOnly) && (this.props.value instanceof Date)) {
             return (
                 <div className="ui-timepicker ui-widget-header ui-corner-all">
                      {this.renderHourPicker()}
