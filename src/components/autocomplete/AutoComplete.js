@@ -597,7 +597,7 @@ export class AutoComplete extends Component {
     }
 
     render() {
-        if(this.input && !this.props.multiple) {
+        if(this.inputEl && !this.props.multiple) {
             this.updateInputField(this.props.value);
         }
 
