@@ -55,7 +55,8 @@ var Calendar = exports.Calendar = function (_Component) {
 
         if (!_this.props.onViewDateChange) {
             _this.state = {
-                viewDate: _this.props.viewDate || _this.props.value || new Date()
+                viewDate: _this.props.viewDate || _this.props.value || new Date(),
+                valueStr: null
             };
         }
 
@@ -137,6 +138,7 @@ var Calendar = exports.Calendar = function (_Component) {
             this.isKeydown = false;
 
             var rawValue = event.target.value;
+            this.setState({ valueStr: rawValue });
 
             try {
                 var value = this.parseValueFromString(rawValue);
@@ -262,7 +264,13 @@ var Calendar = exports.Calendar = function (_Component) {
         key: 'onTodayButtonClick',
         value: function onTodayButtonClick(event) {
             var today = new Date();
-            var dateMeta = { day: today.getDate(), month: today.getMonth(), year: today.getFullYear(), today: true, selectable: true };
+            var dateMeta = {
+                day: today.getDate(),
+                month: today.getMonth(),
+                year: today.getFullYear(),
+                today: true,
+                selectable: true
+            };
 
             this.updateViewDate(event, today);
             this.onDateSelect(event, dateMeta);
@@ -458,6 +466,9 @@ var Calendar = exports.Calendar = function (_Component) {
             newDateTime.setHours(hour);
             newDateTime.setMinutes(minute);
             newDateTime.setSeconds(second);
+
+            var newValueStr = this.formatTime(newDateTime);
+            this.setState({ valueStr: newValueStr });
 
             this.updateModel(event, newDateTime);
 
@@ -814,26 +825,38 @@ var Calendar = exports.Calendar = function (_Component) {
                 if (i === 0) {
                     for (var j = prevMonthDaysLength - firstDay + 1; j <= prevMonthDaysLength; j++) {
                         var prev = this.getPreviousMonthAndYear(month, year);
-                        week.push({ day: j, month: prev.month, year: prev.year, otherMonth: true,
-                            today: this.isToday(today, j, prev.month, prev.year), selectable: this.isSelectable(j, prev.month, prev.year, true) });
+                        week.push({
+                            day: j,
+                            month: prev.month,
+                            year: prev.year,
+                            otherMonth: true,
+                            today: this.isToday(today, j, prev.month, prev.year),
+                            selectable: this.isSelectable(j, prev.month, prev.year, true)
+                        });
                     }
 
                     var remainingDaysLength = 7 - week.length;
                     for (var _j = 0; _j < remainingDaysLength; _j++) {
-                        week.push({ day: dayNo, month: month, year: year, today: this.isToday(today, dayNo, month, year),
-                            selectable: this.isSelectable(dayNo, month, year, false) });
+                        week.push({
+                            day: dayNo, month: month, year: year, today: this.isToday(today, dayNo, month, year),
+                            selectable: this.isSelectable(dayNo, month, year, false)
+                        });
                         dayNo++;
                     }
                 } else {
                     for (var _j2 = 0; _j2 < 7; _j2++) {
                         if (dayNo > daysLength) {
                             var next = this.getNextMonthAndYear(month, year);
-                            week.push({ day: dayNo - daysLength, month: next.month, year: next.year, otherMonth: true,
+                            week.push({
+                                day: dayNo - daysLength, month: next.month, year: next.year, otherMonth: true,
                                 today: this.isToday(today, dayNo - daysLength, next.month, next.year),
-                                selectable: this.isSelectable(dayNo - daysLength, next.month, next.year, true) });
+                                selectable: this.isSelectable(dayNo - daysLength, next.month, next.year, true)
+                            });
                         } else {
-                            week.push({ day: dayNo, month: month, year: year, today: this.isToday(today, dayNo, month, year),
-                                selectable: this.isSelectable(dayNo, month, year, false) });
+                            week.push({
+                                day: dayNo, month: month, year: year, today: this.isToday(today, dayNo, month, year),
+                                selectable: this.isSelectable(dayNo, month, year, false)
+                            });
                         }
 
                         dayNo++;
@@ -1017,37 +1040,41 @@ var Calendar = exports.Calendar = function (_Component) {
     }, {
         key: 'getValueToRender',
         value: function getValueToRender() {
-            var formattedValue = '';
-
-            if (this.props.value) {
+            /*let formattedValue = '';
+              if(this.props.value) {
                 try {
-                    if (this.isSingleSelection()) {
+                    if(this.isSingleSelection()) {
                         formattedValue = this.formatDateTime(this.props.value);
-                    } else if (this.isMultipleSelection()) {
-                        for (var i = 0; i < this.props.value.length; i++) {
-                            var dateAsString = this.formatDateTime(this.props.value[i]);
+                    }
+                    else if(this.isMultipleSelection()) {
+                        for(let i = 0; i < this.props.value.length; i++) {
+                            let dateAsString = this.formatDateTime(this.props.value[i]);
                             formattedValue += dateAsString;
-                            if (i !== this.props.value.length - 1) {
+                            if(i !== (this.props.value.length - 1)) {
                                 formattedValue += ', ';
                             }
                         }
-                    } else if (this.isRangeSelection()) {
-                        if (this.props.value && this.props.value.length) {
-                            var startDate = this.props.value[0];
-                            var endDate = this.props.value[1];
-
+                    }
+                    else if(this.isRangeSelection()) {
+                        if(this.props.value && this.props.value.length) {
+                            let startDate = this.props.value[0];
+                            let endDate = this.props.value[1];
+                            
                             formattedValue = this.formatDateTime(startDate);
-                            if (endDate) {
+                            if(endDate) {
                                 formattedValue += ' - ' + this.formatDateTime(endDate);
                             }
                         }
                     }
-                } catch (err) {
+                } 
+                catch(err) {
                     formattedValue = this.props.value;
                 }
             }
-
+            
             return formattedValue;
+            */
+            return this.state.valueStr;
         }
     }, {
         key: 'formatDateTime',
@@ -1437,6 +1464,40 @@ var Calendar = exports.Calendar = function (_Component) {
             return date;
         }
     }, {
+        key: 'populateTime',
+        value: function populateTime(date, time, ampm) {
+            if (time.indexOf(':') < 0) {
+                var _hours = parseInt(time, 10);
+                if (!isNaN(_hours)) {
+                    date.setHours(_hours);
+                }
+                this.setState({ value: date });
+                return;
+            }
+
+            time = time.split(':');
+            var hours = parseInt(time[0], 10);
+            var minutes = parseInt(time[1], 10);
+
+            if (!isNaN(hours)) {
+                if (ampm === "PM") {
+                    if (hours > 0 && hours < 12) {
+                        hours += 12;
+                    }
+                } else if (ampm === "AM") {
+                    if (hours === 12) {
+                        hours -= 12;
+                    }
+                }
+                date.setHours(hours);
+            }
+
+            if (!isNaN(minutes)) {
+                date.setMinutes(minutes);
+            }
+            this.setState({ value: date });
+        }
+    }, {
         key: 'renderBackwardNavigator',
         value: function renderBackwardNavigator() {
             return _react2.default.createElement(
@@ -1467,7 +1528,8 @@ var Calendar = exports.Calendar = function (_Component) {
                     this.props.locale.monthNames.map(function (month, index) {
                         return _react2.default.createElement(
                             'option',
-                            { key: month, value: index },
+                            { key: month,
+                                value: index },
                             month
                         );
                     })
@@ -1572,8 +1634,16 @@ var Calendar = exports.Calendar = function (_Component) {
 
             return weekDates.map(function (date) {
                 var selected = _this8.isSelected(date);
-                var cellClassName = (0, _classnames2.default)({ 'ui-datepicker-other-month': date.otherMonth, 'ui-datepicker-current-day': selected, 'ui-datepicker-today': date.today });
-                var dateClassName = (0, _classnames2.default)('ui-state-default', { 'ui-state-active': selected, 'ui-state-highlight': date.today, 'ui-state-disabled': !date.selectable });
+                var cellClassName = (0, _classnames2.default)({
+                    'ui-datepicker-other-month': date.otherMonth,
+                    'ui-datepicker-current-day': selected,
+                    'ui-datepicker-today': date.today
+                });
+                var dateClassName = (0, _classnames2.default)('ui-state-default', {
+                    'ui-state-active': selected,
+                    'ui-state-highlight': date.today,
+                    'ui-state-disabled': !date.selectable
+                });
                 var content = _this8.renderDateCellContent(date, dateClassName);
 
                 return _react2.default.createElement(
@@ -1884,7 +1954,7 @@ var Calendar = exports.Calendar = function (_Component) {
     }, {
         key: 'renderTimePicker',
         value: function renderTimePicker() {
-            if ((this.props.showTime || this.props.timeOnly) && this.props.value instanceof Date) {
+            if (this.props.showTime || this.props.timeOnly) {
                 return _react2.default.createElement(
                     'div',
                     { className: 'ui-timepicker ui-widget-header ui-corner-all' },
@@ -1911,9 +1981,14 @@ var Calendar = exports.Calendar = function (_Component) {
 
                 return _react2.default.createElement(_InputText.InputText, { ref: function ref(el) {
                         return _this12.inputElement = _reactDom2.default.findDOMNode(el);
-                    }, id: this.props.inputId, name: this.props.name, value: value, type: 'text', className: className, style: this.props.inputStyle,
-                    readOnly: this.props.readOnlyInput, disabled: this.props.disabled, tabIndex: this.props.tabIndex, required: this.props.required, autoComplete: 'off', placeholder: this.props.placeholder,
-                    onInput: this.onInput, onClick: this.onInputClick, onFocus: this.onInputFocus, onBlur: this.onInputBlur, onKeyDown: this.onInputKeyDown });
+                    }, id: this.props.inputId,
+                    name: this.props.name, value: value, type: 'text', className: className,
+                    style: this.props.inputStyle,
+                    readOnly: this.props.readOnlyInput, disabled: this.props.disabled,
+                    tabIndex: this.props.tabIndex, required: this.props.required, autoComplete: 'off',
+                    placeholder: this.props.placeholder,
+                    onInput: this.onInput, onClick: this.onInputClick, onFocus: this.onInputFocus,
+                    onBlur: this.onInputBlur, onKeyDown: this.onInputKeyDown });
             } else {
                 return null;
             }
@@ -1941,12 +2016,14 @@ var Calendar = exports.Calendar = function (_Component) {
                         _react2.default.createElement(
                             'div',
                             { className: 'ui-g-6' },
-                            _react2.default.createElement(_Button.Button, { type: 'button', label: this.props.locale.today, onClick: this.onTodayButtonClick, className: this.props.todayButtonClassName })
+                            _react2.default.createElement(_Button.Button, { type: 'button', label: this.props.locale.today, onClick: this.onTodayButtonClick,
+                                className: this.props.todayButtonClassName })
                         ),
                         _react2.default.createElement(
                             'div',
                             { className: 'ui-g-6' },
-                            _react2.default.createElement(_Button.Button, { type: 'button', label: this.props.locale.clear, onClick: this.onClearButtonClick, className: this.props.todayButtonClassName })
+                            _react2.default.createElement(_Button.Button, { type: 'button', label: this.props.locale.clear, onClick: this.onClearButtonClick,
+                                className: this.props.todayButtonClassName })
                         )
                     )
                 );
@@ -1991,7 +2068,8 @@ var Calendar = exports.Calendar = function (_Component) {
                     _CalendarPanel.CalendarPanel,
                     { ref: function ref(el) {
                             return _this13.panel = _reactDom2.default.findDOMNode(el);
-                        }, className: panelClassName, style: this.props.panelStyle,
+                        }, className: panelClassName,
+                        style: this.props.panelStyle,
                         appendTo: this.props.appendTo, onClick: this.onPanelClick },
                     datePicker,
                     timePicker,
