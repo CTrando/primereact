@@ -44,7 +44,7 @@ export class Sidebar extends Component {
         if (this.props.visible) {
             this.show();
         } else {
-          this.container.style.display = "none";
+            this.container.style.visibility = "hidden";
         }
     }
 
@@ -63,7 +63,7 @@ export class Sidebar extends Component {
     }
 
     onShow() {
-        this.container.style.display = "";
+        this.container.style.visibility = "visible";
         this.container.style.zIndex = String(this.props.baseZIndex + DomHandler.generateZIndex());
         this.enableModality();
 
@@ -107,7 +107,6 @@ export class Sidebar extends Component {
     }
 
     onHide() {
-        this.container.style.display = "none";
         this.unbindMaskClickListener();
         this.disableModality();
     }
