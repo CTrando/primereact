@@ -43,8 +43,6 @@ export class Sidebar extends Component {
     componentDidMount() {
         if (this.props.visible) {
             this.show();
-        } else {
-            this.container.style.visibility = "hidden";
         }
     }
 
@@ -59,6 +57,10 @@ export class Sidebar extends Component {
                 this.onShow();
             else
                 this.onHide();
+        }
+        if (prevProps.position !== this.props.position && !this.props.visible) {
+            this.container.style.visibility = "hidden";
+            this.disableModality();
         }
     }
 

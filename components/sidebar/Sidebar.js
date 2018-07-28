@@ -48,8 +48,6 @@ var Sidebar = exports.Sidebar = function (_Component) {
         value: function componentDidMount() {
             if (this.props.visible) {
                 this.show();
-            } else {
-                this.container.style.visibility = "hidden";
             }
         }
     }, {
@@ -63,6 +61,10 @@ var Sidebar = exports.Sidebar = function (_Component) {
         value: function componentDidUpdate(prevProps, prevState) {
             if (prevProps.visible !== this.props.visible) {
                 if (this.props.visible) this.onShow();else this.onHide();
+            }
+            if (prevProps.position !== this.props.position && !this.props.visible) {
+                this.container.style.visibility = "hidden";
+                this.disableModality();
             }
         }
     }, {
