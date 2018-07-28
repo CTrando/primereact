@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import DomHandler from '../utils/DomHandler';
@@ -61,6 +61,7 @@ export class Sidebar extends Component {
     }
 
     onShow() {
+        this.container.style.display = "";
         this.container.style.zIndex = String(this.props.baseZIndex + DomHandler.generateZIndex());
         this.enableModality();
 
@@ -74,12 +75,13 @@ export class Sidebar extends Component {
             this.mask = document.createElement('div');
             this.mask.style.zIndex = String(parseInt(this.container.style.zIndex, 10) - 1);
             DomHandler.addMultipleClasses(this.mask, 'ui-widget-overlay ui-sidebar-mask');
+
             if (this.props.dismissable) {
                 this.bindMaskClickListener();
             }
 
             document.body.appendChild(this.mask);
-            
+
             if (this.props.blockScroll) {
                 DomHandler.addClass(document.body, 'ui-overflow-hidden');
             }
@@ -103,6 +105,7 @@ export class Sidebar extends Component {
     }
 
     onHide() {
+        this.container.style.display = "none";
         this.unbindMaskClickListener();
         this.disableModality();
     }
@@ -138,11 +141,11 @@ export class Sidebar extends Component {
 
     render() {
         const className = classNames('ui-sidebar ui-widget ui-widget-content ui-shadow', this.props.className, 'ui-sidebar-' + this.props.position,
-                                       {'ui-sidebar-active': this.props.visible, 'ui-sidebar-full': this.props.fullScreen});
+            {'ui-sidebar-active': this.props.visible, 'ui-sidebar-full': this.props.fullScreen});
         const closeIcon = this.renderCloseIcon();
 
         return (
-            <div ref={(el) => this.container=el} id={this.props.id} className={className} style={this.props.style}>
+            <div ref={(el) => this.container = el} id={this.props.id} className={className} style={this.props.style}>
                 {closeIcon}
                 {this.props.children}
             </div>
