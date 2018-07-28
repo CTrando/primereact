@@ -43,6 +43,8 @@ export class Sidebar extends Component {
     componentDidMount() {
         if (this.props.visible) {
             this.show();
+        } else {
+          this.container.style.display = "none";
         }
     }
 

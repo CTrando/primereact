@@ -48,6 +48,8 @@ var Sidebar = exports.Sidebar = function (_Component) {
         value: function componentDidMount() {
             if (this.props.visible) {
                 this.show();
+            } else {
+                this.container.style.display = "none";
             }
         }
     }, {
@@ -66,6 +68,7 @@ var Sidebar = exports.Sidebar = function (_Component) {
     }, {
         key: 'onShow',
         value: function onShow() {
+            this.container.style.display = "";
             this.container.style.zIndex = String(this.props.baseZIndex + _DomHandler2.default.generateZIndex());
             this.enableModality();
 
@@ -80,6 +83,7 @@ var Sidebar = exports.Sidebar = function (_Component) {
                 this.mask = document.createElement('div');
                 this.mask.style.zIndex = String(parseInt(this.container.style.zIndex, 10) - 1);
                 _DomHandler2.default.addMultipleClasses(this.mask, 'ui-widget-overlay ui-sidebar-mask');
+
                 if (this.props.dismissable) {
                     this.bindMaskClickListener();
                 }
@@ -112,6 +116,7 @@ var Sidebar = exports.Sidebar = function (_Component) {
     }, {
         key: 'onHide',
         value: function onHide() {
+            this.container.style.display = "none";
             this.unbindMaskClickListener();
             this.disableModality();
         }
