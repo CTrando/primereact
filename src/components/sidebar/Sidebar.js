@@ -59,13 +59,11 @@ export class Sidebar extends Component {
                 this.onHide();
         }
         if (prevProps.position !== this.props.position && !this.props.visible) {
-            this.container.style.visibility = "hidden";
-            this.disableModality();
+            this.container.style.zIndex = -999999;
         }
     }
 
     onShow() {
-        this.container.style.visibility = "visible";
         this.container.style.zIndex = String(this.props.baseZIndex + DomHandler.generateZIndex());
         this.enableModality();
 
