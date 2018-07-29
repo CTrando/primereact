@@ -63,12 +63,13 @@ var Sidebar = exports.Sidebar = function (_Component) {
                 if (this.props.visible) this.onShow();else this.onHide();
             }
             if (prevProps.position !== this.props.position && !this.props.visible) {
-                this.container.style.zIndex = -999999;
+                this.container.style.visibility = "hidden";
             }
         }
     }, {
         key: 'onShow',
         value: function onShow() {
+            this.container.style.visibility = "visible";
             this.container.style.zIndex = String(this.props.baseZIndex + _DomHandler2.default.generateZIndex());
             this.enableModality();
 
